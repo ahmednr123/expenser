@@ -7,7 +7,17 @@ import TagModel from '../../model/Tag.js';
 export default {
 
     getExpenses: async function (userId, expenseId, size, offset) {
-        return await this._get(userId, ModelType.Expense, expenseId, size, offset);
+        if (expenseId) {
+            let query = `SELECT t.id, t.name, t.color FROM Tag t, Expense e
+                         INNER JOIN ExpenseToTagsMapping ettm ON ettm.ExpenseId = e.Id
+                         WHERE t.Id = ettm.TagId AND e.Id = ${expenseId}`;
+   
+           let expense = await this._get(userId, ModelType.Expense, expenseId, size, offset);
+           expense.tags = await DBSync.query(query);
+           return expense;
+        } else {
+            return await this._get(userId, ModelType.Expense, expenseId, size, offset);
+        }
     },
 
     getTags: async function (userId, tagId, size, offset) {
@@ -15,7 +25,11 @@ export default {
     },
 
     submitExpense: function (userId, expense, isUpdate, callback) {
-        this._submit(userId, ModelType.Expense, expense, isUpdate, callback);
+        if (isUpdate) {
+            this._submit(userId, ModelType.Expense, expense, isUpdate, callback);
+        } else {
+            this._insertExpense(expense.type, expense.date, expense.amount, userId, expense.tags, callback);
+        }
     },
 
     submitTag: function (userId, tag, isUpdate, callback) {
@@ -33,6 +47,42 @@ export default {
         }
         
         return await DBSync.query(query);
+    },
+
+    _insertExpense: function (type, date, amount, userId, tags) {
+        DB.beginTransaction(function (err) {
+            if (err) {
+                console.log('Error while adding expense: ' + JSON.stringify(err, null, 4));
+                return;
+            }
+
+            DB.query('INSERT INTO `Expense` (`Type`,`Date`,`Amount`,`UserId`) VALUES (?, ?, ?, ?)', [type, date, amount, userId], function (err, res, fields) {
+                if (err) {
+                    return connection.rollback(function() {
+                      throw err;
+                    });
+                }
+    
+                console.log(res.insertId + ' EXPENSE ADDED');
+                for (let tag of tags) {
+                    DB.query('INSERT INTO `ExpenseToTagsMapping` (`ExpenseId`,`TagId`, `UserId`) VALUES (?, ?, ?)', [res.insertId, tag, userId], function (err, res, fields) {
+                        if (err) {
+                            console.log('Error while adding expense: ' + JSON.stringify(err, null, 4));
+                            return DB.rollback(function() {throw err;});
+                        }
+    
+                        console.log('EXPENSE MAPPING ADDED');
+                        DB.commit(function(err) {
+                            if (err) {
+                                console.log('Error while adding expense: ' + JSON.stringify(err, null, 4));
+                                return DB.rollback(function() {throw err;});
+                            }
+                            console.log('Success!');
+                        });
+                    })
+                }
+            });
+        });
     },
 
     _submit: function (userId, type, document, isUpdate, callback) {
