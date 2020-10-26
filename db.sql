@@ -3,9 +3,9 @@
 CREATE TABLE `Account` (
   `Id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `Username` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(100) DEFAULT NULL,
-  `password` varchar(1000) DEFAULT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Phone` varchar(100) DEFAULT NULL,
+  `Password` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Account_UN` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -16,6 +16,7 @@ CREATE TABLE `Account` (
 CREATE TABLE `Expense` (
   `Id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `Type` varchar(8) NOT NULL,
+  `Name` varchar(20) NOT NULL,
   `Date` date NOT NULL,
   `Desc` mediumtext NOT NULL,
   `Amount` bigint(20) unsigned NOT NULL,
@@ -43,11 +44,8 @@ CREATE TABLE `Tag` (
 CREATE TABLE `ExpenseToTagsMapping` (
   `ExpenseId` bigint(20) unsigned NOT NULL,
   `TagId` bigint(20) unsigned NOT NULL,
-  `UserId` bigint(20) unsigned NOT NULL,
-  KEY `ExpenseToTagsMapping_FK` (`UserId`),
   KEY `ExpenseToTagsMapping_FK_1` (`ExpenseId`),
   KEY `ExpenseToTagsMapping_FK_2` (`TagId`),
-  CONSTRAINT `ExpenseToTagsMapping_FK` FOREIGN KEY (`UserId`) REFERENCES `Account` (`Id`),
   CONSTRAINT `ExpenseToTagsMapping_FK_1` FOREIGN KEY (`ExpenseId`) REFERENCES `Expense` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `ExpenseToTagsMapping_FK_2` FOREIGN KEY (`TagId`) REFERENCES `Tag` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
