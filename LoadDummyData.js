@@ -72,7 +72,7 @@ function addExpense (name, type, date, amount, userId, tags) {
         if (err) throw err;
         DB.query('INSERT INTO `Expense` (`Name`, `Type`,`Date`,`Amount`,`UserId`) VALUES (?, ?, ?, ?, ?)', [name, type, date, amount, userId], function (err, res, fields) {
             if (err) {
-                return connection.rollback(function() {
+                return DB.rollback(function() {
                   throw err;
                 });
             }
