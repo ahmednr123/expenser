@@ -7,17 +7,15 @@ import TagModel from '../../model/Tag.js';
 export default {
 
     getExpenses: async function (userId, expenseId, size, offset) {
+        let expense = await this._get(userId, ModelType.Expense, expenseId, size, offset);
         if (expenseId) {
             let query = `SELECT t.id, t.name, t.color FROM Tag t, Expense e
                          INNER JOIN ExpenseToTagsMapping ettm ON ettm.ExpenseId = e.Id
                          WHERE t.Id = ettm.TagId AND e.Id = ${expenseId}`;
-   
-           let expense = await this._get(userId, ModelType.Expense, expenseId, size, offset);
-           expense.tags = await DBSync.query(query);
-           return expense;
-        } else {
-            return await this._get(userId, ModelType.Expense, expenseId, size, offset);
+            expense.tags = await DBSync.query(query);
         }
+
+        return expense;
     },
 
     getTags: async function (userId, tagId, size, offset) {
