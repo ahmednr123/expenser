@@ -3,7 +3,6 @@ import {UserAuth} from '../module/Middleware.js';
 
 import TagModel from '../model/Tag.js';
 import ModelController from '../db/controller/Model.js';
-import Tag from '../model/Tag.js';
 
 const Router = Express.Router();
 Router.use(UserAuth);
