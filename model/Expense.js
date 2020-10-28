@@ -7,6 +7,7 @@ export default {
 
     Column: {
         ID: 'Id',
+        Name: 'Name',
         Type: 'Type',
         Date: 'Date',
         Desc: 'Desc',
