@@ -15,9 +15,9 @@ let userAuth = function (req, res, next) {
 };
 
 Router.post('/authenticate', (req, res) => {
-    let userId = req.body.userId;
+    let username = req.body.username;
     let password = req.body.password;
-    let isUserAuthentic = AccountController.isUserAuthentic(userId, password);
+    let isUserAuthentic = AccountController.isUserAuthentic(username, password);
     if (isUserAuthentic) {
         req.session.userId = userId;
         res.end('true');

@@ -5,8 +5,8 @@ import AccountModel from '../../model/Account.js';
 
 export default {
 
-    isUserAuthentic: async function (userId, password) {
-        let records = await DBSync(`SELECT ${AccountModel.Column.Password} FROM Account WHERE ${AccountModel.Column.ID} = ${userId}`);
+    isUserAuthentic: async function (username, password) {
+        let records = await DBSync(`SELECT ${AccountModel.Column.Password} FROM Account WHERE ${AccountModel.Column.Username} = ${username}`);
         return Crypt.checkPassword(password, records[0][AccountModel.Column.Password]);
     },
 
