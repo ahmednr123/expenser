@@ -14,11 +14,11 @@ let userAuth = function (req, res, next) {
     }
 };
 
-Router.post('/authenticate', (req, res) => {
+Router.post('/authenticate', async (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
-    let isUserAuthentic = AccountController.isUserAuthentic(username, password);
-    if (isUserAuthentic) {
+    let userId = AccountController.getUserId(username, password);
+    if (userId) {
         req.session.userId = userId;
         res.end('true');
     } else {
