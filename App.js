@@ -10,7 +10,7 @@ import Session from 'express-session';
 import MySQLSession from 'express-mysql-session';
 
 const MySQLStore = MySQLSession(Session);
-const SessionStore = new MySQLStore(Config.mysql);
+const SessionStore = new MySQLStore(Config.MYSQL);
 
 const App = Express();
 
