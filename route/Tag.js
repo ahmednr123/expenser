@@ -7,8 +7,9 @@ import ModelController from '../db/controller/Model.js';
 const Router = Express.Router();
 Router.use(UserAuth);
 
-Router.get('/', (req, res) => {
-    res.end(ModelController.getTags(req.session.userId, null, 10, req.body.offset));
+Router.get('/', async (req, res) => {
+    let jsonData = await ModelController.getTags(req.session.userId, null, 10, req.body.offset);
+    res.end(JSON.stringify(jsonData));
 });
 
 Router.post('/', (req, res) => {
@@ -20,11 +21,12 @@ Router.post('/', (req, res) => {
     });
 });
 
-Router.get('/:tagId', () => {
-    res.end(ModelController.getTags(req.session.userId, req.params.tagId, null, null));
+Router.get('/:tagId', async (req, res) => {
+    let jsonData = await ModelController.getTags(req.session.userId, req.params.tagId, null, null);
+    res.end(JSON.stringify(jsonData));
 });
 
-Router.put('/:tagId', () => {
+Router.put('/:tagId', (req, res) => {
     let tag = {};
     tag[TagModel.Column.ID] = req.body.id;
     tag[TagModel.Column.Name] = req.body.name;

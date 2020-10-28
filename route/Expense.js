@@ -7,8 +7,9 @@ import ModelController from '../db/controller/Model.js';
 const Router = Express.Router();
 Router.use(UserAuth);
 
-Router.get('/', (req, res) => {
-    res.end(ModelController.getExpenses(req.session.userId, null, 10, req.query.offset ? req.query.offset : 0));
+Router.get('/', async (req, res) => {
+    let jsonData = await ModelController.getExpenses(req.session.userId, null, 10, req.query.offset ? req.query.offset : 0);
+    res.end(JSON.stringify(jsonData));
 });
 
 Router.post('/', (req, res) => {
@@ -23,8 +24,9 @@ Router.post('/', (req, res) => {
     })
 });
 
-Router.get('/:expenseId', (req, res) => {
-    res.end(ModelController.getExpenses(req.session.userId, req.params.expenseId, null, null));
+Router.get('/:expenseId', async (req, res) => {
+    let jsonData = await ModelController.getExpenses(req.session.userId, req.params.expenseId, null, null);
+    res.end(JSON.stringify(jsonData));
 });
 
 Router.put('/:expenseId', (req, res) => {

@@ -8,11 +8,11 @@ export default {
 
     getExpenses: async function (userId, expenseId, size, offset) {
         let expense = await this._get(userId, ModelType.Expense, expenseId, size, offset);
-        if (expenseId) {
+        if (expenseId > 0) {
             let query = `SELECT t.id, t.name, t.color FROM Tag t, Expense e
                          INNER JOIN ExpenseToTagsMapping ettm ON ettm.ExpenseId = e.Id
                          WHERE t.Id = ettm.TagId AND e.Id = ${expenseId}`;
-            expense.tags = await DBSync.query(query);
+            expense[0].tags = await DBSync(query);
         }
 
         return expense;
@@ -44,7 +44,7 @@ export default {
             query += `LIMIT ${size} ${offset ? `OFFSET ${offset}`: ``}`;
         }
         
-        return await DBSync.query(query);
+        return await DBSync(query);
     },
 
     _insertExpense: function (type, date, amount, userId, tags) {
