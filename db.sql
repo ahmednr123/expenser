@@ -16,7 +16,7 @@ CREATE TABLE `Account` (
 CREATE TABLE `Expense` (
   `Id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `Type` varchar(8) NOT NULL,
-  `Name` varchar(20) NOT NULL,
+  `Name` varchar(100) NOT NULL,
   `Date` date NOT NULL,
   `Desc` mediumtext DEFAULT NULL,
   `Amount` bigint(20) unsigned NOT NULL,
