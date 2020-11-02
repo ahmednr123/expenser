@@ -22,11 +22,11 @@ export default {
         return await this._get(userId, ModelType.Tag, tagId, size, offset);
     },
 
-    submitExpense: function (userId, expense, isUpdate, callback) {
+    submitExpense: function (userId, expense, tags, isUpdate, callback) {
         if (isUpdate) {
             this._submit(userId, ModelType.Expense, expense, isUpdate, callback);
         } else {
-            this._insertExpense(expense.type, expense.date, expense.amount, userId, expense.tags, callback);
+            this._insertExpense(expense, userId, tags, callback);
         }
     },
 
@@ -47,23 +47,29 @@ export default {
         return await DBSync(query);
     },
 
-    _insertExpense: function (type, date, amount, userId, tags) {
+    _insertExpense: function (expense, userId, tags, callback) {
         DB.beginTransaction(function (err) {
             if (err) {
                 console.log('Error while adding expense: ' + JSON.stringify(err, null, 4));
+                callback(false);
                 return;
             }
 
-            DB.query('INSERT INTO `Expense` (`Type`,`Date`,`Amount`,`UserId`) VALUES (?, ?, ?, ?)', [type, date, amount, userId], function (err, res, fields) {
+            console.log(`INSERT INTO Expense ${DBUtil.getColumnValueString(expense, ExpenseModel.Column)}`);
+            DB.query('INSERT INTO Expense (`Name`,`Type`, `Date`, `Desc`, `Amount`, `UserId`) VALUES (?, ?, ?, ?, ?, ?)', [
+                expense[ExpenseModel.Column.Name], expense[ExpenseModel.Column.Type], expense[ExpenseModel.Column.Date],
+                expense[ExpenseModel.Column.Desc], expense[ExpenseModel.Column.Amount], userId 
+            ], function (err, res, fields) {
                 if (err) {
-                    return connection.rollback(function() {
+                    return DB.rollback(function() {
                       throw err;
                     });
                 }
     
+                let expenseId = res.insertId;
                 console.log(res.insertId + ' EXPENSE ADDED');
                 for (let tag of tags) {
-                    DB.query('INSERT INTO `ExpenseToTagsMapping` (`ExpenseId`,`TagId`, `UserId`) VALUES (?, ?, ?)', [res.insertId, tag, userId], function (err, res, fields) {
+                    DB.query('INSERT INTO `ExpenseToTagsMapping` (`ExpenseId`,`TagId`) VALUES (?, ?)', [res.insertId, tag], function (err, res, fields) {
                         if (err) {
                             console.log('Error while adding expense: ' + JSON.stringify(err, null, 4));
                             return DB.rollback(function() {throw err;});
@@ -75,7 +81,7 @@ export default {
                                 console.log('Error while adding expense: ' + JSON.stringify(err, null, 4));
                                 return DB.rollback(function() {throw err;});
                             }
-                            console.log('Success!');
+                            callback(expenseId.toString());
                         });
                     })
                 }
@@ -90,12 +96,12 @@ export default {
         document[ModelColumns.UserId] = userId;
         
         if (!isUpdate) {
-            query = `INSERT INTO ${type} ${DBUtil.getColumnValueString(ModelColumns)}`
+            query = `INSERT INTO ${type} ${DBUtil.getColumnValueString(document, ModelColumns)}`
         } else {
             let id = document[ModelColumns.ID];
             document[ModelColumns.ID] = null;
 
-            query = `UPDATE ${type} SET ${DBUtil.getUpdateValuesString(ModelColumns)} WHERE ${ModelColumns.ID} = ${id} AND ${ModelColumns.UserId} = ${userId}`;
+            query = `UPDATE ${type} SET ${DBUtil.getUpdateValuesString(document, ModelColumns)} WHERE ${ModelColumns.ID} = ${id} AND ${ModelColumns.UserId} = ${userId}`;
         }
 
         DB.query(query, (err, result) => {
@@ -105,7 +111,7 @@ export default {
                 return;
             }
 
-            callback(result.insertId);
+            callback(result.insertId.toString());
         })
     }
     

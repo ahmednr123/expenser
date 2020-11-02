@@ -19,7 +19,7 @@ export default {
     createUser: function (userData, callback) {
         userData[AccountModel.Column.Password] = Crypt.genPassword(userData[AccountModel.Column.Password]);
 
-        let query = `INSERT INTO Account ${DBUtil.getColumnValueString(AccountModel.Column)}`;
+        let query = `INSERT INTO Account ${DBUtil.getColumnValueString(userData, AccountModel.Column)}`;
         DB.query(query, (err, result) => {
             if (err) {
                 console.log(`DB ERROR while creating user account: ${JSON.stringify(err, null, 4)}`);
@@ -36,7 +36,7 @@ export default {
         userData[AccountModel.Column.ID] = null;
         userData[AccountModel.Column.Password] = null;
 
-        let query = `UPDATE Account SET ${DBUtil.getUpdateValuesString(AccountModel.Column)} WHERE ${AccountModel.Column.ID} = ${userId}`;
+        let query = `UPDATE Account SET ${DBUtil.getUpdateValuesString(userData, AccountModel.Column)} WHERE ${AccountModel.Column.ID} = ${userId}`;
         DB.query(query, (err) => {
             if (err) {
                 console.log(`DB ERROR while updating user account: ${JSON.stringify(err, null, 4)}`);

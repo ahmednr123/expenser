@@ -12,19 +12,22 @@ const DB = MySQL.createConnection({
 const DBSync = Util.promisify(DB.query).bind(DB);
 
 const DBUtil = {
-	getColumnValueString: function (modelColumns) {
+	getColumnValueString: function (document, modelColumns) {
 		let columns = [];
 		let values = [];
 		for (let column in modelColumns) {
 			if (document[column]) {
-				columns.push(column);
-				values.push(`'${document[column]}'`);
+				columns.push(`\`${column}\``);
+				if (column.toLocaleLowerCase() == 'date')
+					values.push(`'${document[column].getUTCDate()}-${document[column].getUTCMonth() + 1}-${document[column].getUTCFullYear()}'`);
+				else 
+					values.push(`'${document[column]}'`);
 			}
 		}
-		return `(${columns.concat(',')}) VALUES (${values.concat(',')})`;
+		return `(${columns.join(',')}) VALUES (${values.join(',')})`;
 	},
 
-	getUpdateValuesString: function (modelColumns) {
+	getUpdateValuesString: function (document, modelColumns) {
 		let updatedValues = '';
 		for (let column in modelColumns) {
 			if (document[column]) {

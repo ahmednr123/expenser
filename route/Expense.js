@@ -19,7 +19,9 @@ Router.post('/', (req, res) => {
     expense[ExpenseModel.Column.Date] = new Date(req.body.date);
     expense[ExpenseModel.Column.Type] = req.body.type;
     expense[ExpenseModel.Column.Desc] = req.body.desc;
-    ModelController.submitExpense(req.session.userId, expense, false, (id) => {
+    console.log(req.body.date);
+    console.log(expense[ExpenseModel.Column.Date]);
+    ModelController.submitExpense(req.session.userId, expense, JSON.parse(req.body.tags), false, (id) => {
         res.end(id);
     })
 });
@@ -37,7 +39,7 @@ Router.put('/:expenseId', (req, res) => {
     expense[ExpenseModel.Column.Date] = new Date(req.body.date);
     expense[ExpenseModel.Column.Type] = req.body.type;
     expense[ExpenseModel.Column.Desc] = req.body.desc;
-    ModelController.submitExpense(req.session.userId, expense, true, (id) => {
+    ModelController.submitExpense(req.session.userId, expense, null, true, (id) => {
         res.end(id);
     })
 });
