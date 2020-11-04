@@ -2,7 +2,7 @@ import React from 'react';
 
 import ExpenseDataBlock from '../../components/ExpenseDataBlock';
 import { GlobalScopeHandler, GlobalScopeModule } from '../../GlobalScopeHandler';
-import Popup from '../../components/Popup';
+import {Popup, PopupType} from '../../components/Popup';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,7 +28,7 @@ class Home extends React.Component {
             </div>
             <ExpenseDataBlock data={[{name:"Rent",expense:"8500",type:"debit"}, {name:"Rent",expense:"8500",type:"credit"}]} date="Thursday, 22nd July 2020"/>
             <ExpenseDataBlock data={[{name:"Rent",expense:"8500",type:"debit"}]} date="Saturday, 26th July 2020"/>
-            <Popup heading="Create Expense" responseHandler={this.popupResponseHandler} />
+            <Popup type={PopupType.FORM} heading="Create Expense" responseHandler={this.popupResponseHandler} />
          </div>
       )
    }
