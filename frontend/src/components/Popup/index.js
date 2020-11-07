@@ -1,7 +1,5 @@
 import React from 'react';
 
-import FormPopup from './FormPopup';
-import InfoPopup from './InfoPopup';
 import {GlobalScopeModule, GlobalScopeHandler} from '../../GlobalScopeHandler.js';
 
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +18,10 @@ class Popup extends React.Component {
 
         this.state = {isEnabled: false, heading: props.heading};
         this.type = props.type;
+        this.component = props.component;
         this.attributes = props.attributes;
+        
+        this.fetchData = props.fetchData;
         this.responseHandler = props.responseHandler;
 
         GlobalScopeHandler.addScope(GlobalScopeModule.POPUP, this);
@@ -32,13 +33,18 @@ class Popup extends React.Component {
     }
 
     render () {
-        let popupInnerFrame = null;
+        let InnerBody = this.component;
+        let bottomFrame = null;
         switch (this.type) {
             case PopupType.FORM:
-                popupInnerFrame = (<FormPopup />);
+                bottomFrame = (<div style={{display:"flex",justifyContent:"center", marginTop:"30px"}}>
+                    <button>Submit</button>
+                </div>);
                 break;
             case PopupType.INFO:
-                popupInnerFrame = (<InfoPopup />);
+                bottomFrame = (<div>
+                    <button>Okay</button>
+                </div>);
                 break;
         }
 
@@ -50,12 +56,13 @@ class Popup extends React.Component {
                             <b>{this.state.heading}</b>
                             <div style={{color:'red'}} onClick={this.closePopup}><FontAwesomeIcon icon={faTimes} /></div>
                         </div>
-                        {popupInnerFrame}
+                        <InnerBody />
+                        {bottomFrame}
                     </div>
                 </div>
             );
         } else {
-            return '';
+            return (<div></div>);
         }
     }
 }
