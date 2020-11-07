@@ -1,6 +1,7 @@
 import React from 'react';
 
-import Popup from '../../components/Popup';
+import TagPopup from './TagPopup.js';
+import {Popup, PopupType} from '../../components/Popup';
 import { GlobalScopeHandler, GlobalScopeModule } from '../../GlobalScopeHandler';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -55,7 +56,11 @@ class Tags extends React.Component {
    render() {
       return (
          <div>
-            <Popup heading="Create Tag" responseHandler={this.popupResponseHandler} />
+            <Popup 
+               type={PopupType.FORM} 
+               component={TagPopup} 
+               heading="Tag" 
+               responseHandler={this.popupResponseHandler} />
             <div style={{display:"flex", justifyContent:"space-between"}}>
                <h1 style={{marginTop:"0px"}}>Tags</h1>
                <div style={{paddingTop:"10px"}} onClick={this.handleClick}><FontAwesomeIcon icon={faPlus} /></div>
