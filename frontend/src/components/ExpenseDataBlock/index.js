@@ -19,7 +19,7 @@ class ExpenseDataBlock extends React.Component {
                 <div className="expense-block">
                     {
                         this.state.data.map(json => (
-                            <div className="expense-block-section">
+                            <div key={json.id} className="expense-block-section">
                                 <span>{getType(json.type)}</span>
                                 <div className="expense-block-section-data">
                                     <span>{json.name}</span>
