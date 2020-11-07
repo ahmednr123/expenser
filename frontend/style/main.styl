@@ -29,3 +29,70 @@ nav {
 .nav-link.is-active {
     color: #1F685B;
 }
+
+// FORM
+
+button {
+    padding: 6px 12px;
+    color: white;
+    border:1px solid #2e6da4;
+    border-radius: 5px;
+    background: #337ab7;
+    color: white;
+}
+
+.textbox {
+    padding: 7px;
+    border: 1px solid lightgray;
+    outline: 0px;
+    width: calc(100% - 14px);
+}
+
+.textbox:focus  {
+    border-color: gray;
+}
+
+.dropdown {
+    background: white;
+    border: 1px solid lightgray;
+    padding: 6.5px 7px;
+    outline: 0px;
+    width: calc(100% + 1px);
+}
+
+.holder:hover {
+    z-index: 2;
+}
+
+.holder {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.form-row > .holder > span.head {
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.form-row > .holder > *:last-child {
+    border-radius: 0px;
+    margin-left: -1px;
+}
+
+.form-row > .holder:first-child > *:last-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.form-row > .holder:last-child > *:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+// END FORM
