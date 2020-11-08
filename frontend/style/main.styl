@@ -41,6 +41,25 @@ button {
     color: white;
 }
 
+textarea {
+    resize: none;
+    padding: 7px;
+    border: 1px solid lightgray;
+    outline: 0px;
+    width: calc(100% - 14px);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .textbox {
     padding: 7px;
     border: 1px solid lightgray;
@@ -48,7 +67,7 @@ button {
     width: calc(100% - 14px);
 }
 
-.textbox:focus  {
+.textbox:focus, .dropdown:focus  {
     border-color: gray;
 }
 
@@ -81,18 +100,18 @@ button {
 }
 
 .form-row > .holder > *:last-child {
-    border-radius: 0px;
-    margin-left: -1px;
+    border-radius: 0px !important;
+    margin-left: -1px !important;
 }
 
 .form-row > .holder:first-child > *:last-child {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
 }
 
 .form-row > .holder:last-child > *:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
 }
 
 // END FORM
