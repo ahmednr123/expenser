@@ -11,7 +11,7 @@ class TagPopup extends React.Component {
 
     clickEvent (evt) {
         console.log(this.state.selectedColor);
-        this.setState({selectedColor: evt.target.getAttribute('color')})
+        this.setState({selectedColor: evt.target.getAttribute('color')});
     }
 
     render () {

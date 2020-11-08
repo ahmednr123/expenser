@@ -10,6 +10,10 @@ class SelectColor extends React.Component {
         this.state.colors = props.colors;
         this.clickEvent = props.clickEvent;
     }
+    
+    componentWillReceiveProps(nextProps) {
+        this.setState({selected:nextProps.selected});  
+    }
 
     render () {
         return (
