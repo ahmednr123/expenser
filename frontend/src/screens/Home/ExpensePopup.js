@@ -11,7 +11,8 @@ class ExpensePopup extends React.Component {
             date: {day:21, month:3, year:2020},
             name: '',
             type: '',
-            desc: ''
+            desc: '',
+            selectedTags: []
         }
         
         this.options = [
@@ -20,6 +21,7 @@ class ExpensePopup extends React.Component {
         ]
         
         this.dateEventHanlder = this.dateEventHanlder.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     dateEventHanlder (type, value) {
@@ -29,7 +31,15 @@ class ExpensePopup extends React.Component {
         this.setState({date});
     }
 
+    handleChange (selectedTags) {
+        if (selectedTags == null) {
+            selectedTags = []
+        }
+        this.setState({selectedTags});
+    }
+
     render () {
+        const {selectedOption} = this.state;
         return (
             <div>
                 <div className="form-row">
@@ -41,10 +51,10 @@ class ExpensePopup extends React.Component {
                 <div className="form-row">
                     <div style={{width: "30%"}} className="holder">
                         <span className="head">Type</span>
-                        <Select
-                            defaultValue={this.options[1]} 
-                            options={this.options} 
-                            className="select-tool" />
+                        <select className="dropdown">
+                            <option>CRD</option>
+                            <option>DEB</option>
+                        </select>
                     </div>
                     <div style={{width: "70%"}} className="holder">
                         <span className="head">Expense</span>
@@ -62,6 +72,8 @@ class ExpensePopup extends React.Component {
                     <div style={{width: "100%"}} className="holder">
                         <span className="head">Tags</span>
                         <Select
+                            value={selectedOption}
+                            onChange={this.handleChange}
                             isMulti
                             options={this.options}/>
                     </div>
